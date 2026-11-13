@@ -75,7 +75,6 @@ mod tests {
         state.process(Message::Move(Point { x: 10, y: 15 }));
         state.process(Message::Echo(String::from("Hello world!")));
         state.process(Message::ChangeColor(255, 0, 255));
-        state.process(Message::Quit);
 
         assert_eq!(state.width, 10);
         assert_eq!(state.height, 30);
@@ -83,6 +82,23 @@ mod tests {
         assert_eq!(state.position.y, 15);
         assert_eq!(state.message, "Hello world!");
         assert_eq!(state.color, (255, 0, 255));
+
+        state.process(Message::Resize {
+            width: 30,
+            height: 40,
+        });
+        state.process(Message::Move(Point { x: 50, y: 60 }));
+        state.process(Message::Echo(String::from("Hello again!")));
+        state.process(Message::ChangeColor(1, 2, 3));
+
+        assert_eq!(state.width, 30);
+        assert_eq!(state.height, 40);
+        assert_eq!(state.position.x, 50);
+        assert_eq!(state.position.y, 60);
+        assert_eq!(state.message, "Hello again!");
+        assert_eq!(state.color, (1, 2, 3));
+
+        state.process(Message::Quit);
         assert!(state.quit);
     }
 }
